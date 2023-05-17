@@ -1,0 +1,22 @@
+name: "CI"
+
+on:
+  workflow_dispatch:
+
+env:
+  RHEL_VERSION: "9.2"
+
+jobs:
+  test:
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Setup Docker image cache"
+        uses: "ZentriaMC/gh-cache-docker-images@v1.0.0"
+        with:
+          cache-suffix: "rhel-${{ env.RHEL_VERSION }}"
+
+      - name: "Fetch Go tools"
+        run: |
+          docker run --rm -i --name ubi registry.access.redhat.com/ubi9:"${{ env.RHEL_VERSION }}" \
+            cat /etc/os-release
